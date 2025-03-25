@@ -7,7 +7,7 @@ groups:
     rules:
       - uid: high-ec2-cpu-usage
         title: "High EC2 CPU Utilization"
-        condition: "AWS/EC2 CPUUtilization > 80"
+        condition: "B"
         data:
           - refId: A
             datasourceUid: "${DS_CLOUDWATCH}"
@@ -18,3 +18,13 @@ groups:
               namespace: AWS/EC2
               period: 300
               statistic: Average
+          - refId: B
+            type: threshold
+            conditions:
+              - evaluator:
+                  type: gt
+                  params: [80]
+                operator: and
+                reducer: avg
+                type: query
+                queryRefId: A

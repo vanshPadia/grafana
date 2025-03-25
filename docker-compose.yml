@@ -30,7 +30,3 @@ services:
 
 volumes:
   grafana-data:
-
-networks:
-  default:
-    name: monitoring-network

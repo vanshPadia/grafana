@@ -1,44 +1,91 @@
 apiVersion: 1
 groups:
   - orgId: 1
-    name: "EC2 CPU Alerts"
-    folder: "AWS Monitoring"
+    name: AWS EC2 cpu
+    folder: AWS EC2 Monitoring
     interval: 1m
     rules:
-      - uid: high-ec2-cpu-usage
-        title: "High EC2 CPU Utilization"
-        condition: B
+      - uid: ec2_alert_cpu
+        title: aws cpu alert
+        condition: C
         data:
           - refId: A
-            datasourceUid: cloudwatch_custom_datasource
-            queryType: timeSeriesQuery
             relativeTimeRange:
-              from: 600
+              from: 3600
               to: 0
+            datasourceUid: cloudwatch_custom_datasource
             model:
-              datasource:
-                type: cloudwatch
-                uid: cloudwatch_custom_datasource
               dimensions:
-                InstanceId: ["i-07da4f98660977724"]
+                InstanceId: i-07da4f98660977724
+              expression: ""
+              id: ""
+              intervalMs: 1000
+              label: ""
+              logGroups: []
+              matchExact: true
+              maxDataPoints: 43200
+              metricEditorMode: 0
               metricName: CPUUtilization
+              metricQueryType: 0
               namespace: AWS/EC2
-              period: 300
+              period: ""
+              queryLanguage: CWLI
+              queryMode: Metrics
+              refId: A
+              region: default
+              sqlExpression: ""
               statistic: Average
           - refId: B
-            datasourceUid: cloudwatch_custom_datasource
-            queryType: threshold
-            relativeTimeRange:
-              from: 600
-              to: 0
+            datasourceUid: __expr__
             model:
               conditions:
                 - evaluator:
-                    params: [80]
+                    params: []
                     type: gt
                   operator:
                     type: and
                   query:
-                    params: [A]
+                    params:
+                      - B
                   reducer:
+                    params: []
                     type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 80
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        isPaused: false

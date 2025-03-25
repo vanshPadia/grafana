@@ -1,0 +1,20 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: "EC2 CPU Alerts"
+    folder: "AWS Monitoring"
+    interval: 1m
+    rules:
+      - uid: high-ec2-cpu-usage
+        title: "High EC2 CPU Utilization"
+        condition: "AWS/EC2 CPUUtilization > 80"
+        data:
+          - refId: A
+            datasourceUid: "${DS_CLOUDWATCH}"
+            model:
+              dimensions:
+                InstanceId: ["i-07da4f98660977724"] # Replace with your EC2 Instance ID
+              metricName: CPUUtilization
+              namespace: AWS/EC2
+              period: 300
+              statistic: Average

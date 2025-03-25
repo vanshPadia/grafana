@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persistent Grafana data
+      - grafana-data:/var/lib/grafana
+
+      # CloudWatch Data Source Configuration
+      - ./provisioning/datasources/cloudwatch.yaml:/etc/grafana/provisioning/datasources/cloudwatch.yaml:ro
+
+      # Dashboard Provisioning
+      - ./provisioning/dashboards/ec2-dashboard.yaml:/etc/grafana/provisioning/dashboards/ec2-dashboard.yaml:ro
+      - ./provisioning/dashboards/ec2-overview-dashboard.json:/var/lib/grafana/dashboards/ec2/ec2-overview-dashboard.json:ro
+
+      # Alerting Configuration
+      - ./provisioning/alerting/ec2-cpu-alerts.yaml:/etc/grafana/provisioning/alerting/ec2-cpu-alerts.yaml:ro
+
+    environment:
+      # Grafana configuration
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+      - AWS_DEFAULT_REGION=ap-south-1
+
+volumes:
+  grafana-data:
+
+networks:
+  default:
+    name: monitoring-network

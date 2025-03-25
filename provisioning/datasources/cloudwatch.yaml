@@ -2,6 +2,7 @@ apiVersion: 1
 datasources:
   - name: CloudWatch
     type: cloudwatch
+    uid: cloudwatch_custom_datasource
     jsonData:
       authType: default
       defaultRegion: ap-south-1

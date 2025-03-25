@@ -10,7 +10,7 @@ groups:
         condition: B
         data:
           - refId: A
-            datasourceUid: "${DS_CLOUDWATCH}"
+            datasourceUid: cloudwatch_custom_datasource
             queryType: timeSeriesQuery
             relativeTimeRange:
               from: 600
@@ -18,7 +18,7 @@ groups:
             model:
               datasource:
                 type: cloudwatch
-                uid: "${DS_CLOUDWATCH}"
+                uid: cloudwatch_custom_datasource
               dimensions:
                 InstanceId: ["i-07da4f98660977724"]
               metricName: CPUUtilization

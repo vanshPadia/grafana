@@ -7,31 +7,35 @@ groups:
     rules:
       - uid: high-ec2-cpu-usage
         title: "High EC2 CPU Utilization"
-        condition: "B"
+        condition: B
         data:
           - refId: A
             datasourceUid: "${DS_CLOUDWATCH}"
+            queryType: timeSeriesQuery
+            relativeTimeRange:
+              from: 600
+              to: 0
             model:
-              datasource: "${DS_CLOUDWATCH}"
+              datasource:
+                type: cloudwatch
+                uid: "${DS_CLOUDWATCH}"
               dimensions:
-                InstanceId: ["i-07da4f98660977724"]  # Replace with your EC2 Instance ID
+                InstanceId: ["i-07da4f98660977724"]
               metricName: CPUUtilization
               namespace: AWS/EC2
               period: 300
               statistic: Average
-              relativeTimeRange:
-                from: 5m
-                to: 0s
           - refId: B
-            type: threshold
-            conditions:
-              - query:
-                  params: [A]
-                reducer: last
-                evaluator:
-                  type: gt
-                  params: [80]  # Alert if CPU usage is >80%
-                operator: and
-                reducer: last
-                type: query
-                queryRefId: A
+            datasourceUid: "-"
+            queryType: threshold
+            model:
+              conditions:
+                - evaluator:
+                    params: [80]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last

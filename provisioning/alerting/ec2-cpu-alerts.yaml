@@ -12,19 +12,23 @@ groups:
           - refId: A
             datasourceUid: "${DS_CLOUDWATCH}"
             model:
+              datasource: "${DS_CLOUDWATCH}"
               dimensions:
                 InstanceId: ["i-07da4f98660977724"] # Replace with your EC2 Instance ID
               metricName: CPUUtilization
               namespace: AWS/EC2
               period: 300
               statistic: Average
+              relativeTimeRange:
+                from: 5m
+                to: now
           - refId: B
             type: threshold
             conditions:
               - evaluator:
                   type: gt
-                  params: [80]
+                  params: [80] # Alert if CPU usage is >80%
                 operator: and
-                reducer: avg
+                reducer: last
                 type: query
                 queryRefId: A

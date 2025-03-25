@@ -1,0 +1,10 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: vansh slack
+    receivers:
+      - uid: aws_Contact_points
+        type: slack
+        settings:
+          url: https://hooks.slack.com/services/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
+        disableResolveMessage: false

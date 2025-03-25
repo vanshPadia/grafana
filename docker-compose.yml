@@ -20,6 +20,8 @@ services:
 
       # Alerting Configuration
       - ./provisioning/alerting/ec2-cpu-alerts.yaml:/etc/grafana/provisioning/alerting/ec2-cpu-alerts.yaml:ro
+      - ./provisioning/Notification/notification_policies.yaml:/etc/grafana/provisioning/alerting/notification_policies.yaml:ro
+      - ./provisioning/contactPoints/contact_points.yaml:/etc/grafana/provisioning/alerting/contact_points.yaml:ro
 
     environment:
       # Grafana configuration

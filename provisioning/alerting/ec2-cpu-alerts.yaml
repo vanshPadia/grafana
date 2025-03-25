@@ -26,7 +26,7 @@ groups:
               period: 300
               statistic: Average
           - refId: B
-            datasourceUid: "-"
+            datasourceUid: cloudwatch_custom_datasource
             queryType: threshold
             relativeTimeRange:
               from: 600

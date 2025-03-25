@@ -28,6 +28,9 @@ groups:
           - refId: B
             datasourceUid: "-"
             queryType: threshold
+            relativeTimeRange:
+              from: 600
+              to: 0
             model:
               conditions:
                 - evaluator:

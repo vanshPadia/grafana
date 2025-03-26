@@ -44,7 +44,7 @@
             "targets": [
                 {
                     "dimensions": {
-                        "InstanceId": "i-07da4f98660977724"
+                        "InstanceId": "*"
                     },
                     "metricName": "CPUUtilization",
                     "namespace": "AWS/EC2",

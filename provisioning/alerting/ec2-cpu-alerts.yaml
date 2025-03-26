@@ -16,7 +16,7 @@ groups:
             datasourceUid: cloudwatch_custom_datasource
             model:
               dimensions:
-                InstanceId: *
+                InstanceId: "*"
               expression: ""
               id: ""
               intervalMs: 1000

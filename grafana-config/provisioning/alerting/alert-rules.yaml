@@ -16,7 +16,7 @@ groups:
             datasourceUid: cloudwatch-ds
             model:
               dimensions:
-                InstanceId: i-0021826e969a6376d
+                InstanceId: i-0ac17d075225dfa5f
               metricName: CPUUtilization
               namespace: AWS/EC2
               period: "300"

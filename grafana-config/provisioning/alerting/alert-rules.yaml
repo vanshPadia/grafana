@@ -18,15 +18,29 @@ groups:
               dimensions:
                 InstanceId: i-0ac17d075225dfa5f
               metricName: CPUUtilization
+              metricQueryType: 0
               namespace: AWS/EC2
               period: "300"
+              queryLanguage: CWLI
+              queryMode: Metrics
+              refId: A
+              region: default
               statistic: Average
           - refId: B
             datasourceUid: __expr__
             model:
+              expression: A
+              reducer: last
+              type: reduce
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
               conditions:
                 - evaluator:
-                    params: []
+                    params:
+                      - 80
                     type: gt
                   operator:
                     type: and
@@ -37,27 +51,9 @@ groups:
                     params: []
                     type: last
                   type: query
-              expression: A
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 80
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              expression: B
               type: threshold
+              refId: C
         noDataState: NoData
         execErrState: Error
         for: 1m
+        isPaused: false

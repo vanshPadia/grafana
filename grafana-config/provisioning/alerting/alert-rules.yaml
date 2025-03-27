@@ -13,10 +13,10 @@ groups:
             relativeTimeRange:
               from: 3600
               to: 0
-            datasourceUid: degzty0737wn4d
+            datasourceUid: cloudwatch-ds
             model:
               dimensions:
-                InstanceId: i-0901b090b718cec78
+                InstanceId: "*"
               metricName: CPUUtilization
               namespace: AWS/EC2
               period: "300"
@@ -61,5 +61,3 @@ groups:
         noDataState: NoData
         execErrState: Error
         for: 1m
-        notification_settings:
-          receiver: vansh slack

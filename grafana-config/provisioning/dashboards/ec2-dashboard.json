@@ -1,0 +1,44 @@
+{
+    "id": 35,
+    "title": "EC2 CPU Monitoring",
+    "panels": [
+        {
+            "type": "timeseries",
+            "title": "CPU Utilization",
+            "datasource": {
+                "type": "cloudwatch",
+                "uid": "cloudwatch-ds"
+            },
+            "targets": [
+                {
+                    "dimensions": {
+                        "InstanceId": "i-0901b090b718cec78"
+                    },
+                    "metricName": "CPUUtilization",
+                    "namespace": "AWS/EC2",
+                    "period": "300",
+                    "region": "ap-south-1",
+                    "statistic": "Average",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -8,27 +8,12 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Persistent Grafana data
-      - grafana-data:/var/lib/grafana
-
-      # CloudWatch Data Source Configuration
-      - ./provisioning/datasources/cloudwatch.yaml:/etc/grafana/provisioning/datasources/cloudwatch.yaml:ro
-
-      # Dashboard Provisioning
-      - ./provisioning/dashboards/ec2-dashboard.yaml:/etc/grafana/provisioning/dashboards/ec2-dashboard.yaml:ro
-      - ./provisioning/dashboards/ec2-overview-dashboard.json:/var/lib/grafana/dashboards/ec2/ec2-overview-dashboard.json:ro
-
-      # Alerting Configuration
-      - ./provisioning/alerting/ec2-cpu-alerts.yaml:/etc/grafana/provisioning/alerting/ec2-cpu-alerts.yaml:ro
-      - ./provisioning/alerting/notification_policies.yaml:/etc/grafana/provisioning/alerting/notification_policies.yaml:ro
-      - ./provisioning/alerting/contact_points.yaml:/etc/grafana/provisioning/alerting/contact_points.yaml:ro
-
+      - ./grafana-data:/var/lib/grafana
+      - ./grafana-config/provisioning:/etc/grafana/provisioning
     environment:
-      # Grafana configuration
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-
-      - AWS_DEFAULT_REGION=ap-south-1
+      - GF_SECURITY_ADMIN_USER=admin # Change if needed
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Change for security
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
 
 volumes:
   grafana-data:

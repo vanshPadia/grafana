@@ -1,39 +1,25 @@
 apiVersion: 1
 groups:
   - orgId: 1
-    name: AWS EC2 cpu
-    folder: AWS EC2 Monitoring
+    name: cpu metrics
+    folder: cpu
     interval: 1m
     rules:
-      - uid: ec2_alert_cpu
-        title: aws cpu alert
+      - uid: begzuo25h4w00d
+        title: aws ec2 alert
         condition: C
         data:
           - refId: A
             relativeTimeRange:
               from: 3600
               to: 0
-            datasourceUid: cloudwatch_custom_datasource
+            datasourceUid: degzty0737wn4d
             model:
               dimensions:
-                InstanceId: "*"
-              expression: ""
-              id: ""
-              intervalMs: 1000
-              label: ""
-              logGroups: []
-              matchExact: true
-              maxDataPoints: 43200
-              metricEditorMode: 0
+                InstanceId: i-0901b090b718cec78
               metricName: CPUUtilization
-              metricQueryType: 0
               namespace: AWS/EC2
-              period: ""
-              queryLanguage: CWLI
-              queryMode: Metrics
-              refId: A
-              region: default
-              sqlExpression: ""
+              period: "300"
               statistic: Average
           - refId: B
             datasourceUid: __expr__
@@ -51,14 +37,7 @@ groups:
                     params: []
                     type: last
                   type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
               expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
               type: reduce
           - refId: C
             datasourceUid: __expr__
@@ -77,15 +56,10 @@ groups:
                     params: []
                     type: last
                   type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
               expression: B
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
               type: threshold
         noDataState: NoData
         execErrState: Error
         for: 1m
-        isPaused: false
+        notification_settings:
+          receiver: vansh slack

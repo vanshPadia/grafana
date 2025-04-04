@@ -5,7 +5,7 @@ groups:
     folder: cpu
     interval: 1m
     rules:
-      - uid: begzuo25h4w00d
+      - uid: awscpuec2alert
         title: aws ec2 alert
         condition: C
         data:
@@ -16,7 +16,7 @@ groups:
             datasourceUid: cloudwatch-ds
             model:
               dimensions:
-                InstanceId: i-0b90337fbef33ef9e
+                InstanceId: ${ID}
               metricName: CPUUtilization
               metricQueryType: 0
               namespace: AWS/EC2
@@ -57,3 +57,5 @@ groups:
         execErrState: Error
         for: 1m
         isPaused: false
+        notification_settings:
+          receiver: vansh slack

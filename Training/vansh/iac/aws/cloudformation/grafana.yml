@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create a grafana ec2.
+
+Parameters:
+  environment:
+    Description: environment type
+    Type: String
+    AllowedValues:
+      - dev
+      - prod
+      - staging
+
+  service:
+    Description: Name of the service running in the instance
+    Type: String
+    Default: grafana
+
+  slackUrl:
+    Description: webhook of the slack 
+    Type: String
+
+  keyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: String
+    ConstraintDescription: Must be the name of an existing EC2 KeyPair.
+
+Mappings:
+  envToinstanc:
+    dev:
+      InstanceType: t2.micro
+      ImageId: ami-00bb6a80f01f03502
+    prod:
+      InstanceType: t2.micro
+      ImageId: ami-00bb6a80f01f03502
+    staging:
+      InstanceType: t2.micro
+      ImageId: ami-00bb6a80f01f03502
+
+Resources:
+  grafanaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for openVpn allowing SSH and https access
+      VpcId: !ImportValue vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !ImportValue vpcCidir
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: !ImportValue vpcCidir
+        - IpProtocol: tcp
+          FromPort: 9090
+          ToPort: 9090
+          CidrIp: !ImportValue vpcCidir
+
+      Tags:
+        - Key: Name
+          Value: !Sub ${environment}-${service}-securityGroup
+
+  grafanaInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !FindInMap [envToinstanc, !Ref environment, InstanceType]
+      ImageId: !FindInMap [envToinstanc, !Ref environment, ImageId]
+      SubnetId: !ImportValue publicSubnet1
+      SecurityGroupIds:
+        - !Ref grafanaSecurityGroup
+      KeyName: !Ref keyName
+      Tags:
+        - Key: Name
+          Value: !Sub ${environment}-${service}-ec2
+      UserData: !Base64 
+        Fn::Sub:
+            - |-              
+              #!/bin/bash
+              apt update
+              apt install -y docker.io docker-compose
+              git clone https://github.com/vanshPadia/grafana.git
+              cd grafana
+
+              EC2_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${env.environment}-${env.service}-ec2" --query "Reservations[*].Instances[*].InstanceId" --profile vansh-impressico --output text)
+
+              export ID=$EC2_ID
+              sed -i "s/\"InstanceId\": \".*\"/\"InstanceId\": \"$ID\"/g" grafana-config/provisioning/dashboards/ec2-dashboard.json
+              echo "ID=$EC2_ID" >> ./Training/vansh/.env
+              echo "url=${url}" >> ./Training/vansh/.env
+
+              docker-compose up -d
+            - slackUrl: !Ref slackUrl
+
+
+
+
+Outputs:
+  grafanaSecurityGroupId:
+    Description: The Security Group ID for ec2
+    Value: !Ref grafanaSecurityGroup
+    Export:
+      Name: !Sub "${environment}-${service}-SecurityGroup"
+
+  grafanaInstanceId:
+    Description: The Instance ID of ${service}-ec2
+    Value: !Ref grafanaInstance
+    Export:
+      Name: !Sub "${environment}-${service}-ec2"
